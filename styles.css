@@ -31,10 +31,14 @@ body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--b
 .btn { padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.2s; }
 .btn-small { padding: 0.5rem 1rem; font-size: 0.9rem; }
 .btn-large { padding: 1rem 2rem; font-size: 1.1rem; }
+
+/* Primary Button (Blue) */
 .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
 .btn-primary:hover { background: var(--secondary); transform: translateY(-1px); }
-.btn-secondary { background: white; color: var(--primary); border: 1px solid var(--primary); } /* Changed from gray text to primary color */
-.btn-secondary:hover { background: var(--bg-alt); color: var(--secondary); border-color: var(--secondary); }
+
+/* Secondary Button (Dark) - Making text white */
+.btn-secondary { background: #374151; color: white; border: 1px solid #374151; }
+.btn-secondary:hover { background: #1F2937; border-color: #1F2937; transform: translateY(-1px); }
 
 /* Hero */
 .hero { 
@@ -117,7 +121,7 @@ body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--b
 .blog-post { margin-bottom: 4rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
 .blog-post:last-child { border-bottom: none; }
 .post-date { color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.5rem; display: block; text-align: center; }
-.post-title { font-size: 2rem; margin-bottom: 1rem; color: var(--text); text-align: center; font-weight: 700; } /* Centered Title */
+.post-title { font-size: 2rem; margin-bottom: 1rem; color: var(--text); text-align: center; font-weight: 700; } 
 .post-content { font-size: 1.1rem; line-height: 1.8; color: var(--text); opacity: 0.9; }
 .back-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem; color: var(--primary); text-decoration: none; font-weight: 500; }
 .back-link:hover { text-decoration: underline; }
