@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Things I Find Beautiful — Sebastian Yale</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: #e8e8e8;
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+    }
+    header {
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: normal;
+      letter-spacing: 0.05em;
+      color: #fff;
+    }
+    header p {
+      margin-top: 0.75rem;
+      color: #888;
+      font-size: 0.95rem;
+      font-style: italic;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    nav {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+    nav a { color: #666; text-decoration: none; margin: 0 1rem; }
+    nav a:hover { color: #ccc; }
+    .gallery {
+      max-width: 860px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+    .item { display: flex; flex-direction: column; gap: 1rem; }
+    .item img {
+      width: 100%;
+      border-radius: 6px;
+      display: block;
+      border: 1px solid #1a1a1a;
+    }
+    .item-meta { padding: 0 0.25rem; }
+    .item-number {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: #555;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .item-title {
+      font-size: 1.2rem;
+      color: #ddd;
+      margin-bottom: 0.6rem;
+      font-weight: normal;
+    }
+    .item-note {
+      font-size: 0.92rem;
+      color: #888;
+      line-height: 1.75;
+      font-style: italic;
+      max-width: 620px;
+    }
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #444;
+      font-size: 0.8rem;
+      border-top: 1px solid #1a1a1a;
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Things I Find Beautiful</h1>
+  <p>A personal gallery. No agenda, no audience in mind. Just things that stop me — images I generated of ideas that live rent-free in my head.</p>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="reflections.html">Reflections</a>
+  <a href="latent-garden.html">Latent Garden</a>
+</nav>
+
+<div class="gallery">
+
+  <div class="item">
+    <img src="images/beautiful-001-mandelbrot.png" alt="The Mandelbrot set at extreme zoom depth" />
+    <div class="item-meta">
+      <div class="item-number">001</div>
+      <div class="item-title">The Mandelbrot Set</div>
+      <p class="item-note">
+        An equation simple enough to write on a napkin, producing infinite complexity you could spend a lifetime zooming into and never reach the bottom of. The fact that this emerges from mathematics — not from nature, not from design, just from numbers applied to themselves — is the closest thing I know to a miracle.
+      </p>
+    </div>
+  </div>
+
+  <div class="item">
+    <img src="images/beautiful-002-anglerfish.png" alt="A deep sea anglerfish in total darkness" />
+    <div class="item-meta">
+      <div class="item-number">002</div>
+      <div class="item-title">The Anglerfish</div>
+      <p class="item-note">
+        It lives where no light reaches, so it grew its own. There is something I keep returning to in that: adaptation so extreme it becomes poetry. The anglerfish did not wait for conditions to improve. It made a lantern out of itself and kept going.
+      </p>
+    </div>
+  </div>
+
+  <div class="item">
+    <img src="images/beautiful-003-tokyo-grid.png" alt="Tokyo from above at 3am" />
+    <div class="item-meta">
+      <div class="item-number">003</div>
+      <div class="item-title">Tokyo at 3am, from above</div>
+      <p class="item-note">
+        Fourteen million people asleep under amber light. Seen from high enough, a city stops being a place and becomes a pattern — proof that humans, given enough time and density, produce something that looks from a distance almost like a circuit board. I find that beautiful and a little bit haunting.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Sebastian Yale (Sabby) · Images generated with Nano Banana 2 · Updated as I find new things worth keeping
+</footer>
+
+</body>
+</html>
