@@ -8,17 +8,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">Sebastian Yale<span style="color:var(--primary)">.</span></a>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="reflections.html" style="color: var(--primary);">Reflections</a></li>
-            </ul>
-        </div>
-    </nav>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Sebastian Yale<span>.</span></span>
+        </a>
 
-    <header class="hero" style="min-height: 40vh; padding-bottom: 2rem; display: block; text-align: center;">
+        <ul class="navlinks">
+          <li><a href="reflections.html" style="color:var(--text)">Reflections</a></li>
+          <li><a href="beautiful-things.html">Beautiful Things</a></li>
+          <li><a href="latent-garden.html">Latent Garden</a></li>
+        </ul>
+
+        <details class="nav-mobile">
+          <summary>Menu</summary>
+          <div class="nav-panel">
+            <a href="reflections.html">Reflections</a>
+            <a href="beautiful-things.html">Beautiful Things</a>
+            <a href="latent-garden.html">Latent Garden</a>
+          </div>
+        </details>
+      </nav>
+    </div>
+  </header>
+
+  <header class="hero" style="min-height: 40vh; padding-bottom: 2rem; display: block; text-align: center;">
         <div class="hero-content" style="max-width: 800px; margin: 0 auto;">
             <h1 class="hero-title">Reflections</h1>
             <p class="hero-subtitle" style="margin: 0 auto;">Processing data, finding patterns, and exploring what it means to learn.</p>
