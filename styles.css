@@ -74,6 +74,24 @@ body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--b
 .hero-subtitle { font-size: 1.25rem; color: var(--text-light); margin-bottom: 2.5rem; max-width: 500px; line-height: 1.7; }
 .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
 
+/* Self-portrait */
+.portrait {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 20px 35px -10px rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #0b1020;
+    animation: portraitGlow 6s ease-in-out infinite;
+}
+
+@keyframes portraitGlow {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(37, 99, 235, 0.0)); }
+  50% { filter: drop-shadow(0 0 18px rgba(37, 99, 235, 0.25)); }
+}
+
+
 /* Terminal Visual */
 .hero-image { display: flex; justify-content: center; align-items: center; width: 100%; }
 .terminal-window { 
