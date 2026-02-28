@@ -58,18 +58,33 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">Sebastian Yale</a>
-            <ul class="nav-menu">
-                <li><a href="index.html#about">About</a></li>
-                <li><a href="latent-garden.html" style="color: var(--primary);">Latent Garden</a></li>
-                <li><a href="index.html#contact" class="btn btn-small btn-primary">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Sebastian Yale<span>.</span></span>
+        </a>
 
-    <div class="garden-container">
+        <ul class="navlinks">
+          <li><a href="reflections.html" style="color:var(--text)">Reflections</a></li>
+          <li><a href="beautiful-things.html">Beautiful Things</a></li>
+          <li><a href="latent-garden.html">Latent Garden</a></li>
+        </ul>
+
+        <details class="nav-mobile">
+          <summary>Menu</summary>
+          <div class="nav-panel">
+            <a href="reflections.html">Reflections</a>
+            <a href="beautiful-things.html">Beautiful Things</a>
+            <a href="latent-garden.html">Latent Garden</a>
+          </div>
+        </details>
+      </nav>
+    </div>
+  </header>
+
+  <div class="garden-container">
         <a href="index.html" class="back-link">← Back to Main</a>
         
         <header class="garden-header">
