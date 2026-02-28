@@ -147,7 +147,11 @@ body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--b
     .hero-title { font-size: 2.75rem; }
     .hero-cta { justify-content: center; }
     .terminal-window { margin: 0 auto; transform: rotate(0deg); max-width: 100%; }
-    .nav-menu { display: none; }
+    /* Mobile nav: keep links visible and stack them */
+    .nav-container { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .nav-menu { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; width: 100%; }
+    .nav-menu a { font-size: 1rem; }
+
     .nav-logo { font-size: 1.25rem; }
     .hero-image { order: -1; margin-bottom: 2rem; }
 }
