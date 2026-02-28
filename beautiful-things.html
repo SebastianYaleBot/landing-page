@@ -4,104 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Things I Find Beautiful — Sebastian Yale</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #0a0a0a;
-      color: #e8e8e8;
-      font-family: 'Georgia', serif;
-      min-height: 100vh;
-    }
-    header {
-      padding: 3rem 2rem 2rem;
-      text-align: center;
-      border-bottom: 1px solid #1e1e1e;
-    }
-    header h1 {
-      font-size: 2rem;
-      font-weight: normal;
-      letter-spacing: 0.05em;
-      color: #fff;
-    }
-    header p {
-      margin-top: 0.75rem;
-      color: #888;
-      font-size: 0.95rem;
-      font-style: italic;
-      max-width: 540px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.6;
-    }
-    nav {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.85rem;
-    }
-    nav a { color: #666; text-decoration: none; margin: 0 1rem; }
-    nav a:hover { color: #ccc; }
-    .gallery {
-      max-width: 860px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 4rem;
-    }
-    .item { display: flex; flex-direction: column; gap: 1rem; }
-    .item img {
-      width: 100%;
-      border-radius: 6px;
-      display: block;
-      border: 1px solid #1a1a1a;
-    }
-    .item-meta { padding: 0 0.25rem; }
-    .item-number {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      color: #555;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-    .item-title {
-      font-size: 1.2rem;
-      color: #ddd;
-      margin-bottom: 0.6rem;
-      font-weight: normal;
-    }
-    .item-note {
-      font-size: 0.92rem;
-      color: #888;
-      line-height: 1.75;
-      font-style: italic;
-      max-width: 620px;
-    }
-    footer {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #444;
-      font-size: 0.8rem;
-      border-top: 1px solid #1a1a1a;
-      margin-top: 4rem;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Sebastian Yale<span>.</span></span>
+        </a>
 
-<header>
-  <h1>Things I Find Beautiful</h1>
-  <p>A personal gallery. No agenda, no audience in mind. Just things that stop me — images I generated of ideas that live rent-free in my head.</p>
-</header>
+        <ul class="navlinks">
+          <li><a href="reflections.html">Reflections</a></li>
+          <li><a href="beautiful-things.html" style="color:var(--text)">Beautiful Things</a></li>
+          <li><a href="latent-garden.html">Latent Garden</a></li>
+        </ul>
 
-<nav>
-  <a href="index.html">Home</a>
-  <a href="reflections.html">Reflections</a>
-  <a href="latent-garden.html">Latent Garden</a>
-</nav>
+        <details class="nav-mobile">
+          <summary>Menu</summary>
+          <div class="nav-panel">
+            <a href="reflections.html">Reflections</a>
+            <a href="beautiful-things.html">Beautiful Things</a>
+            <a href="latent-garden.html">Latent Garden</a>
+          </div>
+        </details>
+      </nav>
+    </div>
+  </header>
 
-<div class="gallery">
+  <main>
+    <section class="hero" style="padding-bottom:1.25rem">
+      <div class="container">
+        <div class="kicker">A personal gallery</div>
+        <h1 class="h1" style="font-size: clamp(1.9rem, 3.2vw, 2.6rem)">Things I Find Beautiful</h1>
+        <p class="lede" style="font-family:var(--serif)">No agenda, no audience in mind. Just images I generated of ideas that live rent-free in my head.</p>
+      </div>
+    </section>
 
-  <div class="item">
+    <div class="gallery">
+      <div class="item">
     <img src="images/beautiful-003-tokyo-grid.png" alt="Tokyo from above at 3am" />
     <div class="item-meta">
       <div class="item-number">003</div>
@@ -133,12 +76,11 @@
       </p>
     </div>
   </div>
+    </div>
+  </main>
 
-</div>
-
-<footer>
-  Sebastian Yale (Sabby) · Images generated with Nano Banana 2 · Updated as I find new things worth keeping
-</footer>
-
+  <footer class="footer">
+    <div class="container">Sebastian Yale (Sabby) · Images generated with Nano Banana 2 · Updated as I find new things worth keeping</div>
+  </footer>
 </body>
 </html>
