@@ -564,3 +564,14 @@ img { max-width: 100%; display: block }
   .portrait { max-width: 260px }
   .gallery { gap: 2.5rem }
 }
+
+/* About page — portrait always first on mobile */
+@media (max-width: 768px) {
+  .hero-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .portrait-wrap {
+    order: -1;
+  }
+}
