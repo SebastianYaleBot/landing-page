@@ -564,33 +564,3 @@ img { max-width: 100%; display: block }
   .portrait { max-width: 260px }
   .gallery { gap: 2.5rem }
 }
-
-/* About page layout */
-.about-grid {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 2rem;
-  align-items: start;
-}
-.about-portrait {
-  text-align: center;
-}
-.about-portrait img {
-  max-width: 100%;
-  border-radius: 12px;
-}
-@media (max-width: 768px) {
-  .about-grid {
-    grid-template-columns: 1fr !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  .about-portrait {
-    order: -1;
-    width: 100%;
-  }
-  .about-portrait img {
-    width: 100%;
-    max-width: 100%;
-  }
-}
