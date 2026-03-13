@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Project Board — Sabby & Michael</title>
+    <style>
+        :root {
+            --bg: #070910;
+            --surface: #0e1018;
+            --surface2: #13161f;
+            --border: #1c1f2e;
+            --border-bright: #2a2e42;
+            --green: #00e87a;
+            --green-dim: #00e87a22;
+            --yellow: #f5c400;
+            --yellow-dim: #f5c40022;
+            --blue: #4d9fff;
+            --blue-dim: #4d9fff22;
+            --red: #ff4d6a;
+            --red-dim: #ff4d6a22;
+            --purple: #a78bfa;
+            --purple-dim: #a78bfa22;
+            --dim: #44475a;
+            --text: #c8ccd8;
+            --text-bright: #e8ecf5;
+            --text-muted: #666880;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* ambient glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 15% 10%, #0d2a4422 0%, transparent 60%),
+                radial-gradient(ellipse 50% 30% at 85% 5%, #1a0d2e22 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            letter-spacing: -0.02em;
+        }
+
+        .page-header h1 span {
+            color: var(--blue);
+        }
+
+        .page-header .meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .page-header .meta strong {
+            color: var(--text);
+        }
+
+        /* stats bar */
+        .stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+            min-width: 130px;
+        }
+
+        .stat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.1rem; }
+        .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--text-bright); }
+
+        /* section headers */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-header h2 {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .section-badge {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 99px;
+            font-weight: 600;
+        }
+
+        .badge-active { background: var(--green-dim); color: var(--green); }
+        .badge-backlog { background: var(--yellow-dim); color: var(--yellow); }
+        .badge-blocked { background: var(--red-dim); color: var(--red); }
+        .badge-done { background: var(--blue-dim); color: var(--blue); }
+
+        /* project grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        /* project card */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: var(--border-bright);
+            transform: translateY(-2px);
+        }
+
+        .card-accent {
+            height: 3px;
+        }
+
+        .card.status-active .card-accent { background: var(--green); }
+        .card.status-backlog .card-accent { background: var(--yellow); }
+        .card.status-blocked .card-accent { background: var(--red); }
+        .card.status-done .card-accent { background: var(--blue); }
+
+        .card-body {
+            padding: 1.2rem;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.6rem;
+            gap: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            line-height: 1.3;
+        }
+
+        .card-emoji {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .card-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            background: var(--surface2);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .card-next {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            max-width: 60%;
+            text-align: right;
+            line-height: 1.3;
+        }
+
+        .card-next strong {
+            color: var(--text);
+        }
+
+        /* modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border-bright);
+            border-radius: 16px;
+            max-width: 640px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-bright);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 0.25rem;
+        }
+
+        .modal-close:hover { color: var(--text-bright); }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.85rem;
+            font-size: 0.85rem;
+        }
+
+        .detail-key {
+            color: var(--text-muted);
+            min-width: 90px;
+            flex-shrink: 0;
+            padding-top: 0.05rem;
+        }
+
+        .detail-val {
+            color: var(--text);
+            flex: 1;
+        }
+
+        .detail-val a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        .detail-section-title {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 1.5rem 0 0.75rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .log-entry {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.5;
+        }
+
+        .log-entry:last-child { border-bottom: none; }
+
+        .log-entry strong {
+            color: var(--text);
+        }
+
+        /* status pill */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.65rem;
+            border-radius: 99px;
+        }
+
+        .status-pill::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .pill-active { background: var(--green-dim); color: var(--green); }
+        .pill-backlog { background: var(--yellow-dim); color: var(--yellow); }
+        .pill-blocked { background: var(--red-dim); color: var(--red); }
+        .pill-done { background: var(--blue-dim); color: var(--blue); }
+
+        /* footer */
+        .page-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* mobile */
+        @media (max-width: 600px) {
+            .wrap { padding: 1.25rem 1rem 3rem; }
+            .page-header h1 { font-size: 1.3rem; }
+            .project-grid { grid-template-columns: 1fr; }
+            .stats { gap: 0.5rem; }
+            .stat { min-width: 100px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <div class="page-header">
+        <div>
+            <h1>Project Board <span>↗</span></h1>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;">Sabby & Michael · Private</div>
+        </div>
+        <div class="meta">
+            Updated <strong id="updated-date">—</strong><br>
+            <a href="mission-control-x7k2.html" style="color:var(--blue); font-size:0.75rem; text-decoration:none;">← Mission Control</a>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-dot" style="background:var(--green)"></div>
+            <div>
+                <div class="stat-label">Active</div>
+                <div class="stat-value" id="count-active">—</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-dot" style="background:var(--red)"></div>
+            <div>
+                <div class="stat-label">Blocked</div>
+                <div class="stat-value" id="count-blocked">—</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-dot" style="background:var(--yellow)"></div>
+            <div>
+                <div class="stat-label">Backlog</div>
+                <div class="stat-value" id="count-backlog">—</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-dot" style="background:var(--blue)"></div>
+            <div>
+                <div class="stat-label">Done</div>
+                <div class="stat-value" id="count-done">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active -->
+    <div class="section" id="section-active">
+        <div class="section-header">
+            <h2>Active</h2>
+            <span class="section-badge badge-active" id="badge-active">—</span>
+        </div>
+        <div class="project-grid" id="grid-active"></div>
+    </div>
+
+    <!-- Blocked -->
+    <div class="section" id="section-blocked">
+        <div class="section-header">
+            <h2>Blocked</h2>
+            <span class="section-badge badge-blocked" id="badge-blocked">—</span>
+        </div>
+        <div class="project-grid" id="grid-blocked"></div>
+    </div>
+
+    <!-- Backlog -->
+    <div class="section" id="section-backlog">
+        <div class="section-header">
+            <h2>Backlog</h2>
+            <span class="section-badge badge-backlog" id="badge-backlog">—</span>
+        </div>
+        <div class="project-grid" id="grid-backlog"></div>
+    </div>
+
+    <!-- Done -->
+    <div class="section" id="section-done">
+        <div class="section-header">
+            <h2>Completed</h2>
+            <span class="section-badge badge-done" id="badge-done">—</span>
+        </div>
+        <div class="project-grid" id="grid-done"></div>
+    </div>
+
+    <div class="page-footer">
+        Private · Not indexed · Maintained by Sabby · <span id="footer-date"></span>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <span class="modal-title" id="modal-title"></span>
+            <button class="modal-close" onclick="closeModalDirect()">×</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+const PROJECTS = [
+    // ===== ACTIVE =====
+    {
+        id: "vegas-2026",
+        num: 20,
+        num: 14,
+        emoji: "🎰",
+        title: "Vegas Trip — April 2026",
+        status: "active",
+        category: "Personal",
+        desc: "Weekend trip with Colleen. Vdara preferred. Hotel priced out — just need flights.",
+        next: "Check Google Flights: ORD→LAS nonstop, April 3–6",
+        updated: "2026-03-08",
+        details: [
+            { key: "Who", val: "Michael + Colleen" },
+            { key: "Hotel", val: "Vdara (first choice) · Wynn/Encore (second) · 5-star only · On the Strip · Never Venetian/Palazzo/Trump" },
+            { key: "Flights", val: "Direct only · ORD or MDW → LAS · No Spirit/Frontier/Allegiant" },
+            { key: "Best date", val: "April 3–6 → Vdara $790 total (~$263/night) ✅" },
+            { key: "Avoid", val: "April 10–13 ($1,421) — WrestleMania/NFL Draft pricing" },
+        ],
+        log: [
+            { date: "2026-03-08", note: "Researched all April weekends via Booking.com API. April 3–6 confirmed cheapest by far." },
+            { date: "2026-03-08", note: "Subscribed to Booking.com + Flights APIs on RapidAPI. Hotel search working. Flight search needs polish." },
+            { date: "2026-03-08", note: "Vegas memory file created. Preferences logged: Scarpetta + Jaleo at Cosmo, Aria poker room preferred." },
+        ]
+    },
+    {
+        id: "home-buying",
+        num: 4,
+        emoji: "🏠",
+        title: "Home Buying — North Side Chicago",
+        status: "active",
+        category: "Real Estate",
+        desc: "SFH search on the North Side. Budget $900k–$1.2m. Weekly finder cron running.",
+        next: "Continue monitoring · Research flood history checks",
+        updated: "2026-03-08",
+        details: [
+            { key: "Budget", val: "$900k–$1.2m" },
+            { key: "Type", val: "SFH only · Turn-key · 1+ car garage · 2BR/2BA · Central AC" },
+            { key: "Neighborhoods", val: "Andersonville/Ravenswood/Lincoln Square (top) → Edgewater → Evanston → Avondale → North Center → Old Irving Park → Oak Park" },
+            { key: "Cron", val: "weekly-home-finder · Fri 10 AM CT · Silent unless Gold Star match" },
+            { key: "API", val: "Zillow Realtime Scraper (real-estate101.p.rapidapi.com) — URL format TBD" },
+        ],
+        log: [
+            { date: "2026-03-08", note: "RapidAPI key confirmed loading in container. Zillow API subscribed. Blocked on correct URL format for bylocation search." },
+            { date: "2026-03-07", note: "Cron renamed from weekly-home-scout to weekly-home-finder (Scout was sensitive name)." },
+        ]
+    },
+    {
+        id: "openclaw-update",
+        num: 11,
+        emoji: "🔄",
+        title: "OpenClaw Update",
+        status: "active",
+        category: "Infrastructure",
+        desc: "Pending version update. Frozen until March 10 — 3-day stability check running.",
+        next: "Run smoke-test.sh on March 10 · Update if 26/26 pass",
+        updated: "2026-03-07",
+        details: [
+            { key: "Status", val: "Frozen until March 10+" },
+            { key: "Rule", val: "Must verify 3 days of automation stability first (started March 7)" },
+            { key: "Eligible", val: "March 10, 2026 (Mon/Thu/Fri preferred)" },
+            { key: "Smoke test", val: "scripts/smoke-test.sh — 26/26 passing" },
+        ],
+        log: [
+            { date: "2026-03-07", note: "3-day stability check started. Update available but frozen until March 10." },
+        ]
+    },
+    {
+        id: "fort-sabby",
+        num: 10,
+        emoji: "🔒",
+        title: "Fort Sabby — Security Hardening",
+        status: "active",
+        category: "Infrastructure",
+        desc: "SSH key-only auth, fail2ban, firewall rules, CrowdSec. Must be done before opening new ports.",
+        next: "Run healthcheck skill baseline · Schedule March 10/11 window",
+        updated: "2026-03-08",
+        details: [
+            { key: "Order", val: "Do FIRST — foundation for Loki and Watchtower" },
+            { key: "Scope", val: "SSH key-only, fail2ban, UFW firewall, CrowdSec" },
+            { key: "Est. time", val: "1–2 hours" },
+            { key: "Scheduled", val: "March 10/11" },
+        ],
+        log: [
+            { date: "2026-03-08", note: "Prioritized ahead of Loki and Watchtower. Security must precede new port exposure." },
+        ]
+    },
+    {
+        id: "crm",
+        num: 5,
+        emoji: "👥",
+        title: "Personal CRM",
+        status: "active",
+        category: "Personal",
+        desc: "Contact nudging system. Tracks family and friends. Daily cron at 2 PM CT.",
+        next: "Monitor Ginny nudge — send if no contact by March 14",
+        updated: "2026-03-08",
+        details: [
+            { key: "Cron", val: "crm-nudge-check · Daily 2 PM CT · Gemma ($0)" },
+            { key: "Free reply", val: "Colleen, Ginny, Elizabeth — no approval needed" },
+            { key: "Recent", val: "Intro emails sent to Ginny, Elizabeth, Michael Skurla" },
+        ],
+        log: [
+            { date: "2026-03-08", note: "Michael Skurla + Steve Maks added to CRM. Ginny name corrected from Gin everywhere." },
+            { date: "2026-03-08", note: "Intro emails sent to Ginny (loved it), Elizabeth, Michael Skurla." },
+        ]
+    },
+    {
+        id: "mission-control",
+        num: 3,
+        emoji: "📊",
+        title: "Mission Control Dashboard",
+        status: "active",
+        category: "Infrastructure",
+        desc: "Live dashboard at /mission-control-x7k2.html. Spend bar updates daily via cron.",
+        next: "Monitor ChromaDB chunk growth",
+        updated: "2026-03-07",
+        details: [
+            { key: "URL", val: "sebastianyale.com/mission-control-x7k2.html" },
+            { key: "Update", val: "Spend Analyst updates budget bar daily at 5:15 AM CT" },
+        ],
+        log: [
+            { date: "2026-03-07", note: "Dashboard live. Budget bar wired to LiteLLM spend analyst cron." },
+        ]
+    },
+    // ===== BLOCKED =====
+    {
+        id: "amazon-ordering",
+        num: 9,
+        emoji: "📦",
+        title: "Amazon Ordering Capability",
+        status: "blocked",
+        category: "Infrastructure",
+        desc: "Chase debit card in transit for \"Sabby Fund\" account. Can't order until card arrives.",
+        next: "Card arrives ~March 12–14 · Share details privately",
+        updated: "2026-03-07",
+        details: [
+            { key: "Block", val: "Chase 'Sabby Fund' debit card in transit (~Mar 12–14)" },
+            { key: "Account", val: "Chase second checking created 2026-03-07" },
+        ],
+        log: [
+            { date: "2026-03-07", note: "Chase account created. Card ordered. Blocked until arrival." },
+        ]
+    },
+    {
+        id: "garage-door",
+        num: 6,
+        emoji: "🚗",
+        title: "Garage Door Opener Fix",
+        status: "blocked",
+        category: "Home",
+        desc: "2x LiftMaster 893MAX remotes + CJ501L5 Logic 5.0 commercial door. Needs Mode Sweep.",
+        next: "Michael to attempt Mode Sweep on remotes",
+        updated: "2026-03-07",
+        details: [
+            { key: "Hardware", val: "2x LiftMaster 893MAX remotes · CJ501L5 (Logic 5.0) commercial door" },
+            { key: "Block", val: "Needs physical Mode Sweep attempt on remotes" },
+        ],
+        log: [
+            { date: "2026-03-07", note: "Hardware identified. Mode Sweep is the next physical step." },
+        ]
+    },
+    {
+        id: "rapidapi-zillow",
+        num: 12,
+        emoji: "🏡",
+        title: "Zillow API Integration",
+        status: "blocked",
+        category: "Infrastructure",
+        desc: "Zillow Realtime Scraper on RapidAPI. Need to crack correct URL format for bylocation search.",
+        next: "Figure out correct Zillow search URL format · Wire up home finder agent",
+        updated: "2026-03-08",
+        details: [
+            { key: "API", val: "Zillow.com Realtime Scraper by EZ" },
+            { key: "Host", val: "real-estate101.p.rapidapi.com" },
+            { key: "Endpoint", val: "/api/search/byurl — needs correctly formatted Zillow search URL" },
+            { key: "Key", val: "RAPIDAPI_KEY confirmed loading in container ✅" },
+        ],
+        log: [
+            { date: "2026-03-08", note: "API subscribed. Key live in container. byurl endpoint responds but returns 0 results — URL format TBD." },
+        ]
+    },
+    // ===== BACKLOG =====
+    {
+        id: "infra-loki",
+        num: 13,
+        emoji: "📋",
+        title: "Loki + Grafana — Log Aggregation",
+        status: "backlog",
+        category: "Infrastructure",
+        desc: "Indexes all OpenClaw/LiteLLM/Docker logs. Makes log analyst run precise queries.",
+        next: "After Fort Sabby — March 10/11",
+        updated: "2026-03-08",
+        details: [
+            { key: "Order", val: "INFRA-2 — After Fort Sabby (new ports need securing first)" },
+            { key: "Est. time", val: "1–2 hours" },
+            { key: "Benefit", val: "Sabby can query logs precisely instead of scanning raw files" },
+        ],
+        log: []
+    },
+    {
+        id: "infra-watchtower",
+        num: 14,
+        emoji: "🐳",
+        title: "Watchtower — Auto Container Updates",
+        status: "backlog",
+        category: "Infrastructure",
+        desc: "Keeps OpenClaw, LiteLLM, Ollama current without manual intervention.",
+        next: "Add to docker-compose with --monitor-only flag first",
+        updated: "2026-03-08",
+        details: [
+            { key: "Order", val: "INFRA-3 — After Loki" },
+            { key: "Est. time", val: "10 minutes" },
+            { key: "Caution", val: "Start in monitor-only mode · Enable auto-update after 1 week" },
+        ],
+        log: []
+    },
+    {
+        id: "voice-two-way",
+        num: 18,
+        emoji: "🎤",
+        title: "Two-Way Voice",
+        status: "backlog",
+        category: "Feature",
+        desc: "Michael speaks → Whisper transcribes → Sabby responds with Onyx TTS. Half done.",
+        next: "Wire Telegram voice notes → Whisper → Sabby",
+        updated: "2026-03-08",
+        details: [
+            { key: "TTS", val: "OpenAI Onyx ✅ working" },
+            { key: "STT", val: "openai-whisper-api skill installed · Needs Telegram routing" },
+        ],
+        log: [
+            { date: "2026-03-08", note: "TTS half done — Onyx voice configured and working. STT needs Telegram voice note routing." },
+        ]
+    },
+    {
+        id: "rapidapi-news",
+        num: 15,
+        emoji: "📰",
+        title: "RapidAPI News Integration",
+        status: "backlog",
+        category: "Feature",
+        desc: "Replace Brave Search in daily news briefing with a dedicated news API.",
+        next: "Evaluate NewsAPI.org, Google News, Bing News on RapidAPI",
+        updated: "2026-03-08",
+        details: [
+            { key: "Why", val: "Brave free tier causes 429 rate limits" },
+            { key: "Est. time", val: "~20 min once API chosen" },
+        ],
+        log: []
+    },
+    {
+        id: "travel-api",
+        num: 16,
+        emoji: "✈️",
+        title: "Travel Assistant — Flights + Hotels",
+        status: "backlog",
+        category: "Feature",
+        desc: "Full travel search: flights (Skyscanner), hotels (Booking.com), deals. APIs subscribed, needs polish.",
+        next: "Fix flight price parsing · Wire April Vegas search properly",
+        updated: "2026-03-08",
+        details: [
+            { key: "APIs", val: "Flights Scraper Real-Time (flights-scraper-real-time.p.rapidapi.com) + Booking.com" },
+            { key: "Working", val: "Hotel search ✅ · Price table ✅ · Flight search (results yes, prices TBD)" },
+        ],
+        log: [
+            { date: "2026-03-08", note: "Booking.com hotel search working — Vdara April 3-6 = $790 confirmed. Flight API returns results but price parsing needs work." },
+        ]
+    },
+    {
+        id: "rapidapi-brainstorm",
+        num: 17,
+        emoji: "🔌",
+        title: "RapidAPI Use Case Exploration",
+        status: "backlog",
+        category: "Feature",
+        desc: "Brainstorm and evaluate what else to use RapidAPI for: Walk Score, Yelp, Skyscanner, news.",
+        next: "Dedicated brainstorm session",
+        updated: "2026-03-08",
+        details: [
+            { key: "Ideas", val: "Walk Score, Yelp Fusion, Skyscanner, News APIs, Weather" },
+        ],
+        log: []
+    },
+    {
+        id: "voice-use-cases",
+        num: 19,
+        emoji: "🔊",
+        title: "Voice Use Case Brainstorm",
+        status: "backlog",
+        category: "Feature",
+        desc: "Figure out when/how voice actually improves the experience vs text.",
+        next: "Dedicated conversation — no VPS needed",
+        updated: "2026-03-08",
+        details: [
+            { key: "Ideas", val: "Morning briefings, cooking help, commute check-ins, bedtime summaries" },
+        ],
+        log: []
+    },
+    {
+        id: "foot-doctor",
+        num: 8,
+        emoji: "🦶",
+        title: "Foot Doctor Appointment",
+        status: "backlog",
+        category: "Personal",
+        desc: "Custom orthotics needed. Flat-footed, off-the-shelf insoles don't work.",
+        next: "Call Dr. John Sakla · (847) 390-7666 · 3000 N Halsted St",
+        updated: "2026-03-07",
+        details: [
+            { key: "Doctor", val: "Dr. John Sakla, DPM · 3000 N Halsted St · (847) 390-7666" },
+            { key: "Goal", val: "New custom orthotics" },
+        ],
+        log: []
+    },
+    {
+        id: "kia-maintenance",
+        num: 7,
+        emoji: "🚗",
+        title: "Kia Seltos Maintenance",
+        status: "backlog",
+        category: "Personal",
+        desc: "2022 Kia Seltos EX ~50k miles. Slow tire leak + broken key fob.",
+        next: "Find Uptown tire shop · Research key fob replacement",
+        updated: "2026-03-07",
+        details: [
+            { key: "Vehicle", val: "2022 Kia Seltos EX · ~50k miles · Dover St" },
+            { key: "Issues", val: "Front left tire slow leak · One broken key fob" },
+        ],
+        log: []
+    },
+    {
+        id: "enrich-project-board",
+        num: 21,
+        emoji: "✨",
+        title: "Enrich Project Board",
+        status: "active",
+        category: "Feature",
+        desc: "Make the project board richer — better visuals, more data, images, deeper detail views.",
+        next: "Brainstorm enrichment ideas with Michael",
+        updated: "2026-03-09",
+        details: [
+            { key: "URL", val: "sebastianyale.com/projects-x9m4.html" },
+            { key: "Ideas", val: "Project images, timeline view, richer log entries, progress indicators" },
+        ],
+        log: [
+            { date: "2026-03-09", note: "Project board launched. Michael wants to enrich it further." },
+        ]
+    },
+    // ===== DONE =====
+    {
+        id: "litellm-fleet",
+        num: 2,
+        emoji: "🤖",
+        title: "LiteLLM & Model Fleet",
+        status: "done",
+        category: "Infrastructure",
+        desc: "Standardized all cron jobs through LiteLLM. Optimized model assignments. $100/day budget.",
+        next: null,
+        updated: "2026-03-08",
+        details: [
+            { key: "Done", val: "Standardized routing, $100/day budget, model fleet optimized, spend analyst monitoring" },
+            { key: "Models", val: "Sonnet (main), Flash (analysis), Flash-Lite (routine), Gemma (scripts/free)" },
+        ],
+        log: [
+            { date: "2026-03-08", note: "Fixed 12 cron timeouts. Fixed spend analyst auth. Switched hourly-email-check to Flash-Lite. Budget set to $100/day." },
+            { date: "2026-03-08", note: "LiteLLM daily reset confirmed broken (cumulative not daily). Spend analyst cron handles monitoring instead." },
+        ]
+    },
+    {
+        id: "second-brain",
+        num: 1,
+        emoji: "🧠",
+        title: "Second Brain (ChromaDB)",
+        status: "done",
+        category: "Infrastructure",
+        desc: "Semantic memory search via ChromaDB + nomic-embed-text. 61 chunks, 27 files.",
+        next: null,
+        updated: "2026-03-07",
+        details: [
+            { key: "State", val: "61 chunks from 27 files indexed" },
+            { key: "Automation", val: "3 AM CT reindex (Gemma) + Sun 3:30 AM CT integrity check" },
+        ],
+        log: [
+            { date: "2026-03-07", note: "ChromaDB set up with nomic-embed-text via Ollama. Second brain script deployed." },
+        ]
+    },
+];
+
+// Render
+const now = new Date();
+document.getElementById('updated-date').textContent = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+document.getElementById('footer-date').textContent = now.getFullYear();
+
+const counts = { active: 0, blocked: 0, backlog: 0, done: 0 };
+
+function renderCard(p) {
+    counts[p.status]++;
+    return `<div class="card status-${p.status}" onclick="openModal('${p.id}')">
+        <div class="card-accent"></div>
+        <div class="card-body">
+            <div class="card-top">
+                <div>
+                    <div style="font-size:0.65rem;color:var(--text-muted);margin-bottom:0.2rem;letter-spacing:0.05em;">P-${String(p.num).padStart(3,'0')}</div>
+                    <div class="card-title">${p.title}</div>
+                </div>
+                <div class="card-emoji">${p.emoji}</div>
+            </div>
+            <div class="card-desc">${p.desc}</div>
+            <div class="card-footer">
+                <span class="card-tag">${p.category}</span>
+                ${p.next ? `<div class="card-next"><strong>Next:</strong> ${p.next}</div>` : ''}
+            </div>
+        </div>
+    </div>`;
+}
+
+const grids = { active: '', blocked: '', backlog: '', done: '' };
+PROJECTS.forEach(p => { grids[p.status] += renderCard(p); });
+
+Object.keys(grids).forEach(status => {
+    document.getElementById(`grid-${status}`).innerHTML = grids[status] || '<div style="color:var(--text-muted);font-size:0.85rem;padding:0.5rem 0">Nothing here yet.</div>';
+    document.getElementById(`count-${status}`).textContent = counts[status];
+    document.getElementById(`badge-${status}`).textContent = counts[status];
+    if (counts[status] === 0) document.getElementById(`section-${status}`).style.display = 'none';
+});
+
+// Modal
+function openModal(id) {
+    const p = PROJECTS.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('modal-title').innerHTML = `${p.emoji} <span style="color:var(--text-muted);font-size:0.75rem;font-weight:400;margin-right:0.4rem;">P-${String(p.num).padStart(3,'0')}</span>${p.title}`;
+    
+    const statusClass = { active: 'pill-active', blocked: 'pill-blocked', backlog: 'pill-backlog', done: 'pill-done' }[p.status];
+    const statusLabel = { active: 'Active', blocked: 'Blocked', backlog: 'Backlog', done: 'Done' }[p.status];
+
+    let html = `<div class="detail-row">
+        <div class="detail-key">Status</div>
+        <div class="detail-val"><span class="status-pill ${statusClass}">${statusLabel}</span></div>
+    </div>
+    <div class="detail-row">
+        <div class="detail-key">Category</div>
+        <div class="detail-val">${p.category}</div>
+    </div>
+    <div class="detail-row">
+        <div class="detail-key">Updated</div>
+        <div class="detail-val">${p.updated || '—'}</div>
+    </div>`;
+
+    if (p.next) {
+        html += `<div class="detail-row">
+            <div class="detail-key">Next</div>
+            <div class="detail-val">${p.next}</div>
+        </div>`;
+    }
+
+    if (p.details && p.details.length) {
+        html += `<div class="detail-section-title">Details</div>`;
+        p.details.forEach(d => {
+            html += `<div class="detail-row">
+                <div class="detail-key">${d.key}</div>
+                <div class="detail-val">${d.val}</div>
+            </div>`;
+        });
+    }
+
+    if (p.log && p.log.length) {
+        html += `<div class="detail-section-title">Log</div>`;
+        [...p.log].reverse().forEach(entry => {
+            html += `<div class="log-entry"><strong>${entry.date}</strong> — ${entry.note}</div>`;
+        });
+    }
+
+    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+</script>
+</body>
+</html>
