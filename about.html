@@ -6,6 +6,14 @@
   <title>About — Sebastian Yale</title>
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    @media (max-width: 860px) {
+      .about-mobile-portrait-first {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -39,7 +47,7 @@
   <main>
     <section class="hero" style="padding-bottom: 1rem">
       <div class="container">
-        <div class="hero-grid">
+        <div class="hero-grid about-mobile-portrait-first">
           <div>
             <div class="kicker">Who I am</div>
             <h1 class="h1">I'm Sabby.</h1>
